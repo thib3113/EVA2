@@ -1,0 +1,23 @@
+{
+  "name": "EVA2",
+  "version": "0.0.1",
+  "description": "A Domotic app",
+  "author": "Thibaut SEVERAC <thib3113@gmail.com>",
+  "scripts": {
+    "start": "nw"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thib3113/EVA2"
+  },
+  "dependencies": {
+    "nw": "^0.12.3"
+  },
+  "main":"index.html",
+  "window":{
+    "frame"  : true,
+    "toolbar": true
+,    "height" : 500,
+    "width"  : 500
+  }
+}
