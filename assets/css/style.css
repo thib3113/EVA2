@@ -1,0 +1,414 @@
+html{
+    height:100%;
+    width:100%
+}
+
+body{
+      overflow: hidden;
+}
+
+#drawer, #wrapper{
+  overflow: auto;
+}
+
+#drawer li {
+  border-bottom: 1px solid gainsboro;
+}
+
+#button_drawer {
+    color: #fff;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+}
+
+#app_title h1{
+    font-size: 20px;
+    margin-top: 13px;
+}   
+
+#app_title{
+    line-height: 3em;
+    color: white;
+}
+
+#header{
+    -webkit-app-region: drag;
+    z-index: 5;
+    height: 50px;
+}
+
+#wrapper{
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 4;
+    padding: 0;
+}
+
+.header-panel {
+    background-color: #009587;
+    height: 50px;
+    z-index: 5;
+}
+
+#drawer_overlay {
+    display: none;
+    background: #000;
+    width: 100%;
+    width: 100vh;
+    height: 100%;
+    position: fixed;
+    /*margin-left: -5px;*/
+    top: 0;
+    z-index: 4;
+    opacity: .4;
+}
+
+#header_clearfix{
+  height: 10px;
+}
+
+#drawer{
+  position: absolute;
+}
+
+#drawer.menu {
+    overflow: auto;
+    padding: 0;
+}
+#drawer.menu, #drawer.menu * {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+}
+#drawer.menu ul {
+    padding: 0;
+    margin: 0;
+}
+#drawer.menu ul li {
+    list-style: none;
+    padding: 20px 0 20px 50px;
+    font-size: 15px;
+    font-weight: normal;
+    cursor: pointer;
+}
+#drawer.menu ul li.active {
+    background-color: #dedede;
+    position: relative;
+}
+#drawer.menu ul li a {
+    color: rgb(51, 51, 51);
+    text-decoration: none;
+}
+
+/*Drawer Icon*/
+.material-icon {
+    width: 30px;
+    height: 50px;
+    margin-top: 13px;
+    position: relative;
+}
+
+.material-icon span,
+.material-icon {
+    transition: all 500ms ease;
+}
+
+.material-icon span {
+    background-color: #fff;
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+.hamburger span {
+    height: 2px;
+    -webkit-transform: translateY(10px);
+}
+
+.hamburger .second {
+    -webkit-transform: translateY(0);
+}
+
+.hamburger .third{
+    -webkit-transform: translateY(20px);
+}
+/* This part is added to the hamburger css so they have the same height and positioning. */
+.hamburger span, .arrow span {
+    height: 2px;
+    -webkit-transform: translateY(10px);
+}
+
+.arrow span{
+    -webkit-transform: translateY(36px);
+}
+
+/* I also need to move it back a bit to keep it centered. */
+.arrow {
+    -webkit-transform: rotate(180deg) translateX(-3px);
+}
+
+.arrow .second,
+.arrow .third {
+    -webkit-transform: rotate(-45deg) translateY(40px) translateX(-21px);
+    width: 20px;
+}
+
+.arrow .second {
+    -webkit-transform: rotate(45deg) translateY(11px) translateX(30px);
+}
+
+
+
+
+* {
+        box-sizing: border-box;
+    }
+    .header-panel {
+        background-color: #009587;
+        height: 144px;
+        position: relative;
+        z-index: 3;
+    }
+    .header-panel div {
+        position: relative;
+        height: 100%;
+    }
+    .header-panel h1 {
+        color: #FFF;
+        font-size: 20px;
+        font-weight: 400;
+        position: absolute;
+        padding-left: 35px;
+    }
+
+    .menu {
+        overflow: auto;
+        padding: 0;
+    }
+    .menu, .menu * {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+    }
+    .menu ul {
+        padding: 0;
+        margin: 7px 0;
+    }
+    .menu ul li {
+        list-style: none;
+        padding: 20px 0 20px 50px;
+        font-size: 15px;
+        font-weight: normal;
+        cursor: pointer;
+    }
+    .menu ul li.active {
+        background-color: #dedede;
+        position: relative;
+    }
+    .menu ul li a {
+        color: rgb(51, 51, 51);
+        text-decoration: none;
+    }
+
+    .pages {
+        position: absolute;
+        top: 0;
+        right: 0;
+        z-index: 4;
+        padding: 0;
+        overflow: auto;
+    }
+    .pages > div {
+        padding: 0 5px;
+        padding-top: 64px;
+    }
+
+    .pages .header {
+        color: rgb(82, 101, 162);
+        font-size: 24px;
+        font-weight: normal;
+        margin-top: 5px;
+        margin-bottom: 60px;
+        letter-spacing: 1.20000004768372px;
+    }
+
+    .page {
+        transform: translateY(1080px);
+        transition: transform 0 linear;
+        display: none;
+        opacity: 0;
+        font-size: 16px;
+    }
+
+    .page.active {
+        transform: translateY(50px);
+        transition: all 0.3s ease-out;
+        display: block;
+        opacity: 1;
+    }
+
+    #opensource {
+        color: rgba(0, 0, 0, 0.62);
+        position: fixed;
+        margin-top: 50px;
+        margin-left: 50px;
+        z-index: 100;
+    }
+
+    #source-modal h4 {
+        color: black;
+    }
+
+    li ul {
+        border-left: 1px solid black;
+    }
+
+    ul.no_puce{
+        list-style:none;
+    }
+
+    .loader {
+        -webkit-animation: rotator 1.4s linear infinite;
+        animation: rotator 1.4s linear infinite;
+    }
+
+    @-webkit-keyframes rotator {
+        0% {
+          -webkit-transform: rotate(0deg);
+          transform: rotate(0deg);
+      }
+      100% {
+          -webkit-transform: rotate(270deg);
+          transform: rotate(270deg);
+      }
+  }
+
+  @keyframes rotator {
+    0% {
+      -webkit-transform: rotate(0deg);
+      transform: rotate(0deg);
+  }
+  100% {
+      -webkit-transform: rotate(270deg);
+      transform: rotate(270deg);
+  }
+}
+.path {
+    stroke-dasharray: 187;
+    stroke-dashoffset: 0;
+    -webkit-transform-origin: center;
+    -ms-transform-origin: center;
+    transform-origin: center;
+    -webkit-animation: dash 1.4s ease-in-out infinite, colors 5.6s ease-in-out infinite;
+    animation: dash 1.4s ease-in-out infinite, colors 5.6s ease-in-out infinite;
+}
+
+@-webkit-keyframes colors {
+    0% {
+      stroke: #4285F4;
+  }
+  25% {
+      stroke: #DE3E35;
+  }
+  50% {
+      stroke: #F7C223;
+  }
+  75% {
+      stroke: #1B9A59;
+  }
+  100% {
+      stroke: #4285F4;
+  }
+}
+
+@keyframes colors {
+    0% {
+      stroke: #4285F4;
+  }
+  25% {
+      stroke: #DE3E35;
+  }
+  50% {
+      stroke: #F7C223;
+  }
+  75% {
+      stroke: #1B9A59;
+  }
+  100% {
+      stroke: #4285F4;
+  }
+}
+@-webkit-keyframes dash {
+    0% {
+      stroke-dashoffset: 187;
+  }
+  50% {
+      stroke-dashoffset: 46.75;
+      -webkit-transform: rotate(135deg);
+      transform: rotate(135deg);
+  }
+  100% {
+      stroke-dashoffset: 187;
+      -webkit-transform: rotate(450deg);
+      transform: rotate(450deg);
+  }
+}
+@keyframes dash {
+    0% {
+      stroke-dashoffset: 187;
+  }
+  50% {
+      stroke-dashoffset: 46.75;
+      -webkit-transform: rotate(135deg);
+      transform: rotate(135deg);
+  }
+  100% {
+      stroke-dashoffset: 187;
+      -webkit-transform: rotate(450deg);
+      transform: rotate(450deg);
+  }
+}
+
+span.hide{
+    width:0px;
+}
+
+#drawer_overlay{
+  display: none;
+  background: black;
+  width: 100vh;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  z-index: 4;
+  opacity: 0.4;
+}
+
+#market_list_plugins li ul{
+    border-left: initial; 
+}
+
+@media (max-width: 991px){
+  body{
+    overflow: hidden;
+  }
+  .header-panel{
+    height: 60px;
+  }
+  .pages > div {
+    padding-top: 80px;
+  }
+  .header-panel{
+    z-index: 5;
+  }
+
+  .header-panel h1{
+     position: initial; 
+     bottom: auto; 
+     padding: initial; 
+  }
+}
