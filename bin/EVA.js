@@ -23,7 +23,7 @@ EVA = function(){
     this.notify = function(pTitle, pBody, pIcon, pTime , pEvents){
         title = pTitle+" - EVA" || "Nouvelle notification - EVA";
         body = pBody || "";
-        icon = pIcon || null;
+        icon = (pIcon) || null;
         time = pTime || 5000; //5s
         defEvents = {
             onclick:null,
@@ -33,11 +33,16 @@ EVA = function(){
         }
         FnEvents = this._mergeObj(defEvents, pEvents);
         if(this.is_nodeWebkit){
+            path = require("path");
+            if(!path.isAbsolute(icon)){
+                icon = path.dirname(process.mainModule.filename)+path.sep+"assets"+path.sep+"images"+path.sep+icon;
+                console.log(icon);
+            }
+
             //encode in good encoding
-            var encoder = require("encoding");
+            encoder = require("encoding");
             body = encoder.convert(body, "windows-1254", "utf8").toString();
             title = encoder.convert(title, "windows-1254", "utf8").toString();
-            console.log(encoder)
 
             var options = {
               "icon": icon,
@@ -65,14 +70,14 @@ EVA = function(){
             var io = require('socket.io-client');
             this.socket = io.connect(pServer);
             this.socket.on('connect', function () {
-              // socket connected
-              // socket.emit('server custom event', { my: 'data' });
-              debugger;
-              curEVA.notify("connecté au serveur");
+              curEVA.notify("connecté au serveur", "La connexion au serveur EVA à réussie !", "icon.png");
             });
             this.socket.on('disconnect', function () {
-              curEVA.notify("Déconnecté du serveur");
+              curEVA.notify("Déconnecté du serveur", "La connexion au serveur EVA à était perdue !", "icon.png");
             });
+            // this.socket.on('disconnect', function (pData) {
+            //   curEVA.notify("Déconnecté du serveur");
+            // });
         }
     }
 
