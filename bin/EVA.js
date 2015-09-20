@@ -8,17 +8,99 @@ EVA = function(){
     this._init = function(){
         this.setConst();
         this.loadConfiguration();
+        this.configureWindow();
         this.connectToServer(this.config.server);
     }
 
-    this._mergeObj = function(obj1, obj2){
-        for(var method in obj2){
-            obj1[method] = obj2[method];
+    this.configureWindow = function(){
+        if(typeof this.config.window != "undefined"){
+            var gui = require('nw.gui');
+            var win = gui.Window.get();
+
+            if(this.config.window.width === parseInt(this.config.window.width, 10) && this.config.window.height === parseInt(this.config.window.height, 10) ){
+                win.resizeTo(this.config.window.width, this.config.window.height);
+            }      
         }
-        return obj1;
+    }
+
+    this._mergeObj = function(objects) {
+        var args
+            , first = Array.prototype.slice.call(arguments, 0, 1)[0]
+            , second;
+
+        if (arguments.length > 1) {
+            second = Array.prototype.splice.call(arguments, 1, 1)[0];
+            for (var key in second) {
+                first[key] = second[key];
+            }
+            args = Array.prototype.slice.call(arguments, 0);
+            return this._mergeObj.apply(this, args);
+        }
+
+        return first;
     }
 
     this._arrayClone = function(pArr){return pArr.slice(0)}
+
+    this.populateSettings = function(){
+        $('[data-config]').each(function(){
+            if(!$(this).data("config").match(/\./)){
+                if(curEVA.config.hasOwnProperty($(this).data("config"))){
+                    $(this).val(curEVA.config[$(this).data("config")]).trigger("change");
+                }
+            }
+            else{
+                lastObj = curEVA.config;
+                list = $(this).data("config").replace(/settings_/, '').split(".");
+                for(obj in list){
+                    if(lastObj.hasOwnProperty(list[obj])){
+                        lastObj = lastObj[list[obj]];
+                    }
+                }
+                if(lastObj !== curEVA.config){
+                    $(this).val(lastObj).trigger("change");                    
+                }
+            }
+        })
+    }
+
+    this.saveSettings = function(){
+        $('[data-config]').each(function(){
+            if(!$(this).data("config").match(/\./)){
+                curEVA.config[$(this).data("config")] = $(this).val();
+            }
+            else{
+                list = $(this).data("config").replace(/settings_/, '').split(".");
+                curEVA.saveSettingsRecursive(curEVA.config, list, $(this).val())
+            }
+        })
+        //si les paramètres de la fenètres ont changés
+        this.configureWindow();
+        this.saveConfig();
+    }
+
+    this.saveSettingsRecursive = function(obj, list, pVal){
+        if(list.length > 0){
+            obj[list[0]] = this.saveSettingsRecursive(obj[list[0]], list.slice(1), pVal)
+            return obj;
+        }
+        else{
+            return (!!parseInt(pVal))? parseInt(pVal) : (!!parseFloat(pVal))? parseFloat(pVal) : pVal ;
+        }
+    }
+
+    this.saveConfig = function(){
+        if(this.is_nodeWebkit){
+            fs = require("fs");
+            fs.writeFile("data/config.json", JSON.stringify(this.config, null, 2), function(err) {
+                if(err) {
+                    curEVA.notify("Erreur lors de la sauvegarde", err);
+                }
+
+                curEVA.notify("Sauvegarde des paramètres réussie", "La sauvegarde des paramètres à réussie");
+            }); 
+        }
+    }
 
     this.notify = function(pTitle, pBody, pIcon, pTime , pEvents){
         title = pTitle+" - EVA" || "Nouvelle notification - EVA";
@@ -36,7 +118,6 @@ EVA = function(){
             path = require("path");
             if(!path.isAbsolute(icon)){
                 icon = path.dirname(process.mainModule.filename)+path.sep+"assets"+path.sep+"images"+path.sep+icon;
-                console.log(icon);
             }
 
             var options = {
@@ -97,7 +178,8 @@ EVA = function(){
 
     this.loadConfiguration = function(){
         if(this.is_nodeWebkit){
-            config = require("./data/config.js");
+            var fs = require('fs');
+            config = JSON.parse(fs.readFileSync('data/config.json').toString());
         }
         this.config = this._mergeObj(this.defaultConfig, config);
     }

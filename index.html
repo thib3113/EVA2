@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset='utf-8'>
     <title>EVA</title>
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/themes/material/css/material.min.css">
@@ -28,15 +29,13 @@
         <div class="row">
             <div id="drawer" class="menu col-md-3 col-sm-6 col-xs-6">
                 <ul>
-                    <li class="withripple">Menu</li>
-                    <li class="withripple">Menu</li>
-                    <li class="withripple">Menu</li>
-                    <li class="withripple">Menu</li>
-                    <li class="withripple">Menu</li>
+                    <li data-target="home" class="withripple">Accueil</li>
+                    <li class="withripple separator"></li>
+                    <li data-target="settings" class="withripple">Paramètres</li>
                 </ul>
             </div>
             <div id="wrapper" class="col-md-9 col-md-offset-1 col-sm-12 col-xs-12">
-                <div class="page active col-md-10 col-xs-12">
+                <div id="home_tab" class="page active col-md-10 col-xs-12">
                     <div id="header_clearfix" class="clearfix"></div>
                     <div class="card">
                         <div class="card-height-indicator"></div>
@@ -51,6 +50,24 @@
                                 <button class="btn btn-flat">Share</button>
                                 <button class="btn btn-flat btn-warning">Learn More</button>
                             </footer>
+                        </div>
+                    </div>
+                </div>
+                <div id="settings_tab" class="page col-md-10 col-xs-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading withripple">
+                            <h3 class="panel-title">Paramètres</h3>
+                        </div>
+                        <div class="panel-body">
+                            <label for="settings_url_server">Serveur</label>
+                            <input type="url" name="url_server" id="settings_url_server" data-config="server" class="form-control floating-label" placeholder="URL du serveur">
+                            <label for="settings_window.height">Hauteur de la fenetre</label>
+                            <input type="number" name="settings_window.height" id="settings_window.height" data-config="settings_window.height" class="form-control floating-label" placeholder="hauteur de la fenetre">
+                            <label for="settings_window.width">Largeur de la fenetre</label>
+                            <input type="number" name="settings_window.width" id="settings_window.width" data-config="settings_window.width" class="form-control floating-label" placeholder="largeur de la fenetre">
+                        </div>
+                        <div class="panel-footer">
+                            <button type="submit" data-action="save_settings" class="btn btn-success btn-flat">Sauvegarder</button>
                         </div>
                     </div>
                 </div>

@@ -77,3 +77,76 @@ $("body").on("click", "[data-role='toggle_drawer']", function(){
     close_drawer();
   }
 });
+
+function setHash(page, query, page_plugin){
+  page = page || window.page;
+  if(query != "" && query != undefined)
+    page += "-search-"+query;
+  else if(window.query_search)
+    page += "-search-"+window.query_search;
+
+  if(page_plugin>1){
+      page += "-page-"+page_plugin;
+  }
+  else if(window.page_plugin>1)
+    page += "-page-"+window.page_plugin;
+
+  window.location.hash = page;
+}
+
+  var str = window.location.hash || "#home";
+  var re = /#([^-]+)(?:-search-([^-]+))*(?:-page-([0-9])+)*/;
+  anchor_data = re.exec(str);
+  
+  window.page = anchor_data[1] || "home";
+  window.page = ""+window.page;
+  window.query_search = anchor_data[2] || "";
+  window.page_plugin = anchor_data[3] || 1;
+
+  $(document).ready(function() {
+    if (window.page != "home") {
+      if(new RegExp(/^#dev_/).test(window.page))
+        $("li[data-target=" + window.page + "]").parent("ul").parent("li").show();
+
+      drawer_element.find("li[data-target=" + window.page + "]").trigger("click");
+    }
+
+
+    E.populateSettings();
+
+    $("body").on("click", '[data-action="save_settings"]', function(){
+      E.saveSettings();
+    })
+  });
+
+  $('body').on('click', '#drawer li', function() {
+
+    if($("body").width() < 992 && typeof $(this).data("target") != "undefined"){
+      close_drawer();
+    }
+
+    // Menu
+    if (!$(this).data("target")) return;
+    if ($(this).is(".active")) return;
+    $(".menu li").not($(this)).removeClass("active");
+    $(".page").not(page).removeClass("active").hide();
+    window.page = $(this).data("target");
+    var page = $("#"+window.page+"_tab");
+
+    setHash("#"+window.page);
+    $(this).addClass("active");
+
+
+    page.show();
+
+    var totop = setInterval(function() {
+      $(".pages").animate({scrollTop:0}, 0);
+    }, 1);
+
+    setTimeout(function() {
+      page.addClass("active");
+      setTimeout(function() {
+        clearInterval(totop);
+      }, 1000);
+    }, 100);
+  });
