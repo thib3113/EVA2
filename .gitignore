@@ -75,4 +75,6 @@ $RECYCLE.BIN/
 *.lnk
 
 deployment-config.json
+sftp-config.json
 db
+data/config.js

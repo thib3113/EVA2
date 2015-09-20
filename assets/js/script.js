@@ -1,8 +1,3 @@
-drawer_open = false;
-drawer_element = $("#drawer");
-container_element = $("#wrapper");
-drawer_overlay = $("#drawer_overlay");
-icon = $('[data-role="drawer_icon"]')[0];
 function drawer_check(){
   if($("body").width() < 992){
     if(!drawer_open){
@@ -26,7 +21,7 @@ function drawer_check(){
 
 function close_drawer(){
   drawer_open = false;
-  icon.className = icon.className.replace(/(?:arrow|hamburger)/ig, "hamburger");
+  drawer_icon.className = drawer_icon.className.replace(/(?:arrow|hamburger)/ig, "hamburger");
   container_element.animate({
                     left: 0,
                 }, 500).css("width", "");
@@ -42,7 +37,7 @@ function close_drawer(){
 function open_drawer(){
   drawer_open = true;
   drawer_overlay.show(0);
-  icon.className = icon.className.replace(/(?:arrow|hamburger)/ig, "arrow");
+  drawer_icon.className = drawer_icon.className.replace(/(?:arrow|hamburger)/ig, "arrow");
   container_element.animate({
                     left: drawer_element.width(),
                     width: container_element.width()
@@ -57,6 +52,12 @@ function open_drawer(){
 }
 
 $(function(){
+  drawer_open = false;
+  drawer_element = $("#drawer");
+  container_element = $("#wrapper");
+  drawer_overlay = $("#drawer_overlay");
+  drawer_icon = $('[data-role="drawer_icon"]')[0];
+
   $(window).resize(function(){
     drawer_check();
     $("html, body").height($(window).height());
