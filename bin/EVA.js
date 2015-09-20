@@ -1,4 +1,5 @@
 EVA = function(){
+    this.version = "0.0.3"
     curEVA = this;
     this.is_nodeWebkit = false;
     this._const = {};
@@ -6,10 +7,20 @@ EVA = function(){
     this.defaultConfig = {};
 
     this._init = function(){
+        this.checkVersion();
         this.setConst();
         this.loadConfiguration();
         this.configureWindow();
         this.connectToServer(this.config.server);
+    }
+
+    this.checkVersion = function(){
+        var fs = require('fs');
+        _package = JSON.parse(fs.readFileSync('package.json').toString());
+        
+        if(this.version != _package.version){
+            throw new Error("Version mismatch !!");
+        }
     }
 
     this.configureWindow = function(){
