@@ -47,8 +47,9 @@ body{
     height: 100%;
 }
 
+/*#34A853*/
 .header-panel {
-    background-color: #009587;
+    background-color: #34A853;
     height: 50px;
     z-index: 5;
 }
@@ -173,7 +174,7 @@ body{
         box-sizing: border-box;
     }
     .header-panel {
-        background-color: #009587;
+        background-color: #34A853;
         height: 144px;
         position: relative;
         z-index: 3;
