@@ -39,11 +39,6 @@ EVA = function(){
                 console.log(icon);
             }
 
-            //encode in good encoding
-            encoder = require("encoding");
-            body = encoder.convert(body, "windows-1254", "utf8").toString();
-            title = encoder.convert(title, "windows-1254", "utf8").toString();
-
             var options = {
               "icon": icon,
               "body": body
