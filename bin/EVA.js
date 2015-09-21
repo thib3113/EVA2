@@ -1,5 +1,5 @@
 EVA = function(){
-    this.version = "0.0.3"
+    this.version = "0.0.4"
     curEVA = this;
     this.is_nodeWebkit = false;
     this.is_focus = false;
@@ -8,14 +8,22 @@ EVA = function(){
     this.defaultConfig = {};
 
     this.previousSnack = null;
+    this.is_devTimer = null;
+    this.is_devCounter = 0;
 
     this._init = function(){
         this.checkVersion();
         this.setConst();
         this.loadConfiguration();
         this.setListener();
+        this.setAbout();
         this.configureWindow();
         this.connectToServer(this.config.server);
+    }
+
+    this.showDevTools = function(opt){
+        var gui = require('nw.gui');
+        gui.Window.get().showDevTools(opt);
     }
 
     this.setListener = function(){
@@ -26,6 +34,37 @@ EVA = function(){
       gui.Window.get().on('blur', function() {
         curEVA.is_focus = false;
       });
+      $('[data-action="go_dev"]').on('click', function() {
+        if(!curEVA.config.user.is_dev){
+            if(curEVA.is_devTimer != null)
+                clearTimeout(curEVA.is_devTimer);
+            curEVA.is_devCounter++;
+
+            if(curEVA.is_devCounter == 7){
+                curEVA.notify("Vous êtes développeur !", null, null , null, true);
+                curEVA.config.user.is_dev = true;
+                curEVA.saveConfig();
+            }
+            else{
+                if(curEVA.is_devCounter > 3){
+                    curEVA.notify("Encore "+(7-curEVA.is_devCounter)+" clic"+(7-curEVA.is_devCounter>1?"s":""), null, null , null, true);
+                }
+                curEVA.is_devTimer = setTimeout(function(){
+                    curEVA.is_devCounter = 0;
+                }, 5000);
+            }
+        }
+        else{
+            curEVA.notify("Vous êtes déjà développeur !", null, null , null, true);
+        }
+      });
+    }
+
+    this.setAbout = function(){
+        this.about = {
+            "version": "EVA "+curEVA.version,
+            "OS": this._const.navigator.OS,
+        }
     }
 
     this.checkVersion = function(){
@@ -87,6 +126,15 @@ EVA = function(){
                 }
             }
         })
+    }
+
+    this.populateAbout = function(){
+        $('[data-about]').each(function(){
+            $(this).data("about")
+            if(curEVA.about.hasOwnProperty($(this).data("about"))){
+                $(this).html(curEVA.about[$(this).data("about")]);
+            }
+        });
     }
 
     this.saveSettings = function(){
@@ -166,9 +214,9 @@ EVA = function(){
         }
     }
 
-    this.notify = function(pBody, pTime, pIcon , pEvents){
+    this.notify = function(pBody, pTime, pIcon , pEvents, pLight){
         if(this.is_focus){
-            this.showSnackbar(pBody, pTime, pEvents);
+            this.showSnackbar(pBody, pTime, pEvents, pLight);
         }
         else{
             this.showNotification(pBody, pIcon, pTime , pEvents);
@@ -209,7 +257,6 @@ EVA = function(){
           }
         }.bind(snackbar), time);
 
-        console.log(time);
         snackbar.addEventListener('transitionend', function(event, elapsed) {
           if (event.propertyName === 'opacity' && this.style.opacity == 0) {
             this.parentElement.removeChild(this);
@@ -253,6 +300,7 @@ EVA = function(){
                 name:"node-webkit",
                 version: process.versions['node-webkit'],
             };
+            var parser = require('ua-parser-js');
         }
         else{
             this._navigatorExtend();
@@ -262,6 +310,9 @@ EVA = function(){
                 version: window.navigator.version,
             };
         }
+        uaParsed = parser(navigator.userAgent);
+        this._const.navigator.OS = uaParsed.os.name+" "+uaParsed.os.version;
+
     }
 
     this.loadConfiguration = function(){

@@ -53,13 +53,13 @@
                     <li data-target="home" class="withripple">Accueil</li>
                     <li class="withripple separator"></li>
                     <li data-target="settings" class="withripple">Paramètres</li>
+                    <li data-target="about" class="withripple mini">À propos</li>
                 </ul>
             </div>
             <div id="wrapper" class="col-md-9 col-md-offset-1 col-sm-12 col-xs-12">
                 <div id="home_tab" class="page active col-md-10 col-xs-12">
                     <div id="header_clearfix" class="clearfix"></div>
                     <div class="card">
-                        <div class="card-height-indicator"></div>
                         <div class="card-content">
                             <div class="card-image">
                                 <img src="assets/images/EVA.png" alt="logo">
@@ -90,6 +90,31 @@
                         </div>
                         <div class="panel-footer">
                             <button type="submit" data-action="save_settings" class="btn btn-success btn-flat">Sauvegarder</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="about_tab" class="page col-md-10 col-xs-12">
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="card-image">
+                                <img src="assets/images/EVA.png" alt="logo">
+                            </div>
+                            <div class="card-list">
+                                <table class="table table-striped table-hover ">
+                                    <tbody>
+                                        <tr>
+                                            <td class="withripple" data-action="go_dev">
+                                                Version : <br>
+                                                <span data-about="version">undefined</span>
+                                            </td>
+                                            <td class="withripple" data-action="go_dev">
+                                                OS : <br>
+                                                <span data-about="OS">undefined</span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>

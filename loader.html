@@ -1,0 +1,89 @@
+<div class="loading">
+  <div class="loading-bar"></div>
+  <div class="loading-bar"></div>
+  <div class="loading-bar"></div>
+  <div class="loading-bar"></div>
+</div>
+<style>
+html, body{
+    -webkit-app-region: drag;
+    -webkit-user-select: none;
+    background-color:rgba(0,0,0,0);
+    margin:0;
+    padding: 0;
+}
+.loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
+.loading-bar {
+  display: inline-block;
+  width: 4px;
+  height: 18px;
+  border-radius: 4px;
+  -webkit-animation: loading 1s ease-in-out infinite;
+          animation: loading 1s ease-in-out infinite;
+}
+.loading-bar:nth-child(1) {
+  background-color: #3498db;
+  -webkit-animation-delay: 0;
+          animation-delay: 0;
+}
+.loading-bar:nth-child(2) {
+  background-color: #c0392b;
+  -webkit-animation-delay: 0.09s;
+          animation-delay: 0.09s;
+}
+.loading-bar:nth-child(3) {
+  background-color: #f1c40f;
+  -webkit-animation-delay: .18s;
+          animation-delay: .18s;
+}
+.loading-bar:nth-child(4) {
+  background-color: #27ae60;
+  -webkit-animation-delay: .27s;
+          animation-delay: .27s;
+}
+
+@-webkit-keyframes loading {
+  0% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+  20% {
+    -webkit-transform: scale(1, 2.2);
+            transform: scale(1, 2.2);
+  }
+  40% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+}
+
+@keyframes loading {
+  0% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+  20% {
+    -webkit-transform: scale(1, 2.2);
+            transform: scale(1, 2.2);
+  }
+  40% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+}
+</style>
+<script>
+  var gui = require('nw.gui');
+
+  // Open a new window.
+  var win = gui.Window.open('index.html').hide();
+
+  var current_win = gui.Window.get();
+  current_win.setTransparent(true);
+  // Listen to main window's close event
+  // gui.Window.get().close();
+</script>

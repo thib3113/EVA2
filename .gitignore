@@ -77,4 +77,4 @@ $RECYCLE.BIN/
 deployment-config.json
 sftp-config.json
 db
-data/config.js
+data/config.json

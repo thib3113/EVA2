@@ -1,6 +1,6 @@
 {
   "name": "EVA2",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A Domotic app",
   "author": "Thibaut SEVERAC <thib3113@gmail.com>",
   "scripts": {
@@ -13,14 +13,16 @@
   "dependencies": {
     "nw": "^0.12.3",
     "socket.io": "^1.3.6",
-    "socket.io-client": "^1.3.6"
+    "socket.io-client": "^1.3.6",
+    "ua-parser-js": "^0.7.9"
   },
   "main": "index.html",
   "window": {
-    "frame": true,
-    "toolbar": true,
+    "frame": false,
+    "toolbar": false,
     "height": 500,
     "width": 500,
-    "min-width":500
+    "min-width": 500,
+    "icon": "assets/images/icon.png"
   }
 }
