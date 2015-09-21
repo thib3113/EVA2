@@ -111,6 +111,14 @@ function setHash(page, query, page_plugin){
       drawer_element.find("li[data-target=" + window.page + "]").trigger("click");
     }
 
+    
+
+    var longMessage = "This is a longer message that won't fit on one line. It is, inevitably, quite a boring thing. Hopefully it is still useful.";
+    var shortMessage = 'Your message was sent';
+
+    // document.getElementById('single').addEventListener('click', function() {
+    //   createSnackbar(shortMessage);    
+    // });
 
     E.populateSettings();
 

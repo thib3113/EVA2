@@ -2,16 +2,30 @@ EVA = function(){
     this.version = "0.0.3"
     curEVA = this;
     this.is_nodeWebkit = false;
+    this.is_focus = false;
     this._const = {};
     this.config = {};
     this.defaultConfig = {};
+
+    this.previousSnack = null;
 
     this._init = function(){
         this.checkVersion();
         this.setConst();
         this.loadConfiguration();
+        this.setListener();
         this.configureWindow();
         this.connectToServer(this.config.server);
+    }
+
+    this.setListener = function(){
+      var gui = require('nw.gui');
+      gui.Window.get().on('focus', function() {
+        curEVA.is_focus = true;
+      });
+      gui.Window.get().on('blur', function() {
+        curEVA.is_focus = false;
+      });
     }
 
     this.checkVersion = function(){
@@ -113,10 +127,10 @@ EVA = function(){
         }
     }
 
-    this.notify = function(pTitle, pBody, pIcon, pTime , pEvents){
-        title = pTitle+" - EVA" || "Nouvelle notification - EVA";
+    this.showNotification = function(pBody, pIcon, pTime , pEvents){
+        title = "Nouvelle notification - EVA";
         body = pBody || "";
-        icon = (pIcon) || null;
+        icon = pIcon || "icon.png";
         time = pTime || 5000; //5s
         defEvents = {
             onclick:null,
@@ -152,15 +166,78 @@ EVA = function(){
         }
     }
 
+    this.notify = function(pBody, pTime, pIcon , pEvents){
+        if(this.is_focus){
+            this.showSnackbar(pBody, pTime, pEvents);
+        }
+        else{
+            this.showNotification(pBody, pIcon, pTime , pEvents);
+        }
+    }
+
+    this.showSnackbar = function(pMessage, pTime, pEvents, action) {
+        message = pMessage || "";
+        time = pTime || 5000; //5s
+        defEvents = {
+            onclick:null,
+            onclose:null,
+            onerror:null,
+            onshow:null
+        }
+        FnEvents = this._mergeObj(defEvents, pEvents);
+        if (curEVA.previousSnack) {
+          curEVA.previousSnack.dismiss();
+        }
+        var snackbar = document.createElement('div');
+        snackbar.className = 'paper-snackbar';
+        snackbar.dismiss = function() {
+          this.style.opacity = 0;
+        };
+        var text = document.createTextNode(message);
+        snackbar.appendChild(text);
+        if (!action) {
+            action = snackbar.dismiss.bind(snackbar);
+        }
+        var actionButton = document.createElement('button');
+        actionButton.className = 'action';
+        actionButton.innerHTML = "cacher";
+        actionButton.addEventListener('click', action);
+        snackbar.appendChild(actionButton);
+        setTimeout(function() {
+          if (curEVA.previousSnack === this) {
+            curEVA.previousSnack.dismiss();
+          }
+        }.bind(snackbar), time);
+
+        console.log(time);
+        snackbar.addEventListener('transitionend', function(event, elapsed) {
+          if (event.propertyName === 'opacity' && this.style.opacity == 0) {
+            this.parentElement.removeChild(this);
+            if (curEVA.previousSnack === this) {
+              curEVA.previousSnack = null;
+            }
+          }
+        }.bind(snackbar));
+
+
+
+        this.previousSnack = snackbar;
+        document.body.appendChild(snackbar);
+        // In order for the animations to trigger, I have to force the original style to be computed, and then change it.
+        getComputedStyle(snackbar).bottom;
+        snackbar.style.bottom = '0px';
+        snackbar.style.opacity = 1;
+    }
+
     this.connectToServer = function(pServer){
         if(this.is_nodeWebkit){
             var io = require('socket.io-client');
             this.socket = io.connect(pServer);
             this.socket.on('connect', function () {
-              curEVA.notify("connecté au serveur", "La connexion au serveur EVA à réussie !", "icon.png");
+              curEVA.notify("Connecté au serveur EVA");
             });
             this.socket.on('disconnect', function () {
-              curEVA.notify("Déconnecté du serveur", "La connexion au serveur EVA à était perdue !", "icon.png");
+              curEVA.notify("Déconnecté du serveur EVA");
             });
             // this.socket.on('disconnect', function (pData) {
             //   curEVA.notify("Déconnecté du serveur");
