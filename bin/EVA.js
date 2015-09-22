@@ -1,5 +1,5 @@
 EVA = function(){
-    this.version = "0.0.4"
+    this.version = "0.0.5"
     curEVA = this;
     this.is_nodeWebkit = false;
     this.is_focus = false;
@@ -21,9 +21,10 @@ EVA = function(){
         this.connectToServer(this.config.server);
     }
 
-    this.showDevTools = function(opt){
+    this.close = function(){
         var gui = require('nw.gui');
-        gui.Window.get().showDevTools(opt);
+        win = gui.Window.get();
+        win.close();
     }
 
     this.setListener = function(){
@@ -33,6 +34,32 @@ EVA = function(){
       });
       gui.Window.get().on('blur', function() {
         curEVA.is_focus = false;
+      });
+      $('[data-control]').on('click', function(){
+        control = $(this).data("control");
+        var gui = require('nw.gui');
+        win = gui.Window.get();
+        
+        switch(control){
+            case "open_dev_tools":
+                if(win.isDevToolsOpen())
+                    win.closeDevTools();
+                else
+                    win.showDevTools();
+            break;
+            case "minimize_window":
+                win.minimize();
+            break;
+            case "maximize_window":
+                if(win.width < screen.availWidth && win.height < screen.availHeight)
+                    win.maximize();
+                else
+                    win.unmaximize();
+            break;
+            case "close_window":
+                curEVA.close();
+            break;
+        }
       });
       $('[data-action="go_dev"]').on('click', function() {
         if(!curEVA.config.user.is_dev){
@@ -63,7 +90,7 @@ EVA = function(){
     this.setAbout = function(){
         this.about = {
             "version": "EVA "+curEVA.version,
-            "OS": this._const.navigator.OS,
+            "OS": this._const.navigator.os.name+" "+this._const.navigator.os.version,
         }
     }
 
@@ -77,6 +104,9 @@ EVA = function(){
     }
 
     this.configureWindow = function(){
+        if(!this.is_nodeWebkit){
+            return;
+        }
         if(typeof this.config.window != "undefined"){
             var gui = require('nw.gui');
             var win = gui.Window.get();
@@ -84,6 +114,12 @@ EVA = function(){
             if(this.config.window.width === parseInt(this.config.window.width, 10) && this.config.window.height === parseInt(this.config.window.height, 10) ){
                 win.resizeTo(this.config.window.width, this.config.window.height);
             }      
+        }
+
+        //on ajoute boutons de controls
+        $("html").addClass(this._const.navigator.os.name.toLowerCase()).addClass(this._const.navigator.browser.name.toLowerCase());
+        if(curEVA.config.user.is_dev){
+            $("html").addClass("is_dev");
         }
     }
 
@@ -220,6 +256,15 @@ EVA = function(){
         }
         else{
             this.showNotification(pBody, pIcon, pTime , pEvents);
+            this.requestAttention(true);
+        }
+    }
+
+    this.requestAttention = function(pVal){
+        val = pVal || 1;
+        if(this.is_nodeWebkit){
+            var gui = require('nw.gui');
+            gui.Window.get().requestAttention(val);
         }
     }
 
@@ -243,13 +288,12 @@ EVA = function(){
         };
         var text = document.createTextNode(message);
         snackbar.appendChild(text);
-        if (!action) {
-            action = snackbar.dismiss.bind(snackbar);
-        }
         var actionButton = document.createElement('button');
         actionButton.className = 'action';
         actionButton.innerHTML = "cacher";
-        actionButton.addEventListener('click', action);
+        actionButton.addEventListener('click', function(){
+            curEVA.previousSnack.dismiss();
+        });
         snackbar.appendChild(actionButton);
         setTimeout(function() {
           if (curEVA.previousSnack === this) {
@@ -296,9 +340,10 @@ EVA = function(){
         if(typeof process != "undefined"){
             this.is_nodeWebkit = true;
             this._const.navigator = 
-            {
+            { "browser":{
                 name:"node-webkit",
                 version: process.versions['node-webkit'],
+                }
             };
             var parser = require('ua-parser-js');
         }
@@ -307,11 +352,10 @@ EVA = function(){
             this._const.navigator = 
             {
                 name:window.navigator.browser,
-                version: window.navigator.version,
             };
         }
         uaParsed = parser(navigator.userAgent);
-        this._const.navigator.OS = uaParsed.os.name+" "+uaParsed.os.version;
+        this._const.navigator = this._mergeObj(uaParsed, this._const.navigator);
 
     }
 

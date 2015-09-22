@@ -122,7 +122,6 @@ function setHash(page, query, page_plugin){
 
     E.populateSettings();
     E.populateAbout();
-    E.showDevTools();
 
     $("body").on("click", '[data-action="save_settings"]', function(){
       E.saveSettings();
